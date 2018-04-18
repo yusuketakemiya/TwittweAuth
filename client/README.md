@@ -1,4 +1,4 @@
-# twitterstampclient
+# twitterauthclient
 
 > A Vue.js project
 
