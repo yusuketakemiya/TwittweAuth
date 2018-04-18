@@ -1,0 +1,4 @@
+falcon==1.0.0rc2
+waitress==1.1.0
+twitter==1.18.0
+mysql-connector-python-rf=2.2.2
