@@ -10,7 +10,8 @@ export default new Vuex.Store({
     twitter: {
       token: null,
       verifier: null,
-      authUrl: null
+      authUrl: null,
+      isAuth: false
     }
   },
   mutations: {
@@ -23,9 +24,11 @@ export default new Vuex.Store({
       if (token == null) {
         localStorage.removeItem('oauth_token')
         localStorage.removeItem('oauth_verifier')
+        twitter.isAuth = false
       } else {
         localStorage.setItem('oauth_token', token)
         localStorage.setItem('oauth_verifier', verifier)
+        twitter.isAuth = true
       }
     }
   },
