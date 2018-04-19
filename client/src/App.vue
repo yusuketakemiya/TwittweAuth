@@ -1,12 +1,6 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-link to="/HelloWorld">
-      HelloWorld
-    </router-link>
-    <router-link to="/Auth">
-      Auth
-    </router-link>
+    <img src="./assets/nikukyu.png">
     <router-view></router-view>
   </div>
 </template>

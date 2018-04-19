@@ -17,8 +17,8 @@ class ManageTwitter:
         self.hidden_twitter = settwitter
 
     twitter = property(get_twitter, set_twitter)
-    CONSUMER_KEY = "vctSOz4G69frlc3Gb0w3oARKs"
-    CONSUMER_SECRET="vOIcxftGqdsETC47M1YNGx7IEgeNdlENjia5uLj4YW8aQQ5hUJ"
+    CONSUMER_KEY = "HwYPqzZgCHEG8sUMkXr1111gg"
+    CONSUMER_SECRET="iZPKHqXN7OubTeofDEZIW4Xh30Nbn9aNILtCns5tbkdgr4CuXv"
     OAUTH_TOKEN = None
     OAUTH_SECRET = None
     
