@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 
 Vue.use(Vuex)
 
@@ -47,40 +48,29 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    authTwitter ({commit}) {
+    authTwitter ({commit}, authLocationHref) {
       console.log('authTwitter:' + AUTHORIZE_URL)
-      fetch(AUTHORIZE_URL)
+      axios.get(AUTHORIZE_URL)
         .then(response => {
-          alert('authTwitter response')
-          if (response.ok) {
-            return response.text()
-          } else {
-            alert(response)
-            throw new Error()
-          }
-        })
-        .then(data => {
-          console.log(data)
-          commit('authUrlRegist', data.url)
+          console.log(response.data)
+          commit('authUrlRegist', response.data.url)
+          authLocationHref(response.data.url)
         })
         .catch(error => {
-          alert('authTwitter error:' + error)
           console.error('Error:', error)
         })
     },
     getAccessTokenTwitter ({commit, state}) {
       var url = ACCESS_TOKEN_URL + '?' + 'oauth_token=' + state.twitter.token + '&' + 'oauth_verifier=' + state.twitter.verifier
       console.log('getAccessTokenTwitter:' + url)
-      fetch(url)
+      axios.get(url)
         .then(response => {
-          return response.json()
-        })
-        .then(data => {
-          console.log(data)
-          commit('authUserTokenRegist', data.token)
-          commit('authUserSecretRegist', data.secret)
+          alert('getAccessTokenTwitter get')
+          commit('authUserTokenRegist', response.data.token)
+          commit('authUserSecretRegist', response.data.secret)
         })
         .catch(error => {
+          alert('getAccessTokenTwitter catch')
           console.error('Error:', error)
         })
     },

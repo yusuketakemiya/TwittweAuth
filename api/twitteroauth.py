@@ -36,12 +36,14 @@ class ManageTwitter:
         return oauth_url
 
     def get_access_token(self, oauth_token, oauth_verifier):
-        print("accessurl call")
+        print("get_access_token call")
         twitter = Twitter(
             auth=OAuth(oauth_token, '', self.CONSUMER_KEY, self.CONSUMER_SECRET),
             format='', api_version=None)
+        print("parse_oauth_tokens call")
         oauth_token, oauth_token_secret = self.parse_oauth_tokens(
             twitter.oauth.access_token(oauth_verifier=oauth_verifier))
+        print("get_access_token return")
         return oauth_token, oauth_token_secret
     
     def oauthverifier(self, oauth_verifier):

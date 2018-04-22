@@ -41,6 +41,7 @@ def twittergetaccesstoken():
     result = HTTPResponse(status=200, body=body)
     result.set_header('Content-Type', 'application/json')
     result.set_header('Access-Control-Allow-Origin', '*') #デバッグ用クロスドメイン
+    print('twittergetaccesstoken result')
     return result
 
 # localhost:8080/twittercallback

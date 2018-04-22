@@ -37,7 +37,9 @@ export default {
       this.getAccessTokenTwitter()
     },
     authTwitterCall () {
-      this.authTwitter()
+      this.authTwitter(this.authLocationHref)
+    },
+    authLocationHref (authUrl) {
       location.href = this.$store.state.twitter.authUrl
     },
     ...mapActions(['authTwitter']),
