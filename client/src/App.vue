@@ -24,7 +24,7 @@ export default {
     init () {
       this.authTwitterLoad()
       if (this.$store.state.twitter.isAuth) {
-        if ( location.pathname === '/#/Main') { return }
+        if (location.pathname === '/#/Main') { return }
         location.href = './#/Main'
         return
       }

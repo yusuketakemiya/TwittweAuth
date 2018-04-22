@@ -3,7 +3,8 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const URI = 'http://localhost:8080/twitteroauthurl'
+const AUTHORIZE_URL = 'http://localhost:8080/twitteroauthurl'
+const ACCESS_TOKEN_URL = 'http://localhost:8080/twittergetaccesstoken'
 
 export default new Vuex.Store({
   state: {
@@ -18,28 +19,66 @@ export default new Vuex.Store({
     authUrlRegist ({ twitter }, authUrl) {
       twitter.authUrl = authUrl
     },
-    authTokenKeyRegist ({ twitter }, token, verifier) {
+    authTokenRegist ({ twitter }, token) {
       twitter.token = token
-      twitter.verifier = verifier
       if (token == null) {
         localStorage.removeItem('oauth_token')
-        localStorage.removeItem('oauth_verifier')
         twitter.isAuth = false
       } else {
         localStorage.setItem('oauth_token', token)
+        twitter.isAuth = true
+      }
+    },
+    authVerifierRegist ({ twitter }, verifier) {
+      twitter.verifier = verifier
+      if (verifier == null) {
+        localStorage.removeItem('oauth_verifier')
+        twitter.isAuth = false
+      } else {
         localStorage.setItem('oauth_verifier', verifier)
         twitter.isAuth = true
       }
+    },
+    authUserTokenRegist ({ twitter }, token) {
+      alert('authUserTokenRegist:' + token)
+    },
+    authUserSecretRegist ({ twitter }, secret) {
+      alert('authUserSecretRegist:' + secret)
     }
   },
   actions: {
     authTwitter ({commit}) {
-      console.log('authTwitter:' + URI)
-      fetch(URI)
-        .then(res => { return res.json() })
+      console.log('authTwitter:' + AUTHORIZE_URL)
+      fetch(AUTHORIZE_URL)
+        .then(response => {
+          alert('authTwitter response')
+          if (response.ok) {
+            return response.text()
+          } else {
+            alert(response)
+            throw new Error()
+          }
+        })
         .then(data => {
           console.log(data)
           commit('authUrlRegist', data.url)
+        })
+        .catch(error => {
+          alert('authTwitter error:' + error)
+          console.error('Error:', error)
+        })
+    },
+    getAccessTokenTwitter ({commit, state}) {
+      var url = ACCESS_TOKEN_URL + '?' + 'oauth_token=' + state.twitter.token + '&' + 'oauth_verifier=' + state.twitter.verifier
+      console.log('getAccessTokenTwitter:' + url)
+      fetch(url)
+        .then(response => {
+          return response.json()
+        })
+        .then(data => {
+          console.log(data)
+          commit('authUserTokenRegist', data.token)
+          commit('authUserSecretRegist', data.secret)
         })
         .catch(error => {
           console.error('Error:', error)

@@ -16,13 +16,31 @@ def init():
 def twitteroauthurl():
     print('twitteroauthurl call')
     url = twittermodel.oauth_url()
+    print('oauth_url:' + url)
     json_obj = {}
     json_obj["url"] = url
     body = json.dumps(json_obj, ensure_ascii=False)
     result = HTTPResponse(status=200, body=body)
     result.set_header('Content-Type', 'application/json')
+
     result.set_header('Access-Control-Allow-Origin', '*') #デバッグ用クロスドメイン
-    print(result)
+    print('twitteroauthurl result')
+    return result
+
+# localhost:8080/twittergetaccesstoken
+@route('/twittergetaccesstoken', method='GET')
+def twittergetaccesstoken():
+    # GETパラメータの取得(oauth_token, oauth_verifier)
+    print("oauth_token:" + request.query.oauth_token)
+    print("oauth_verifier:" + request.query.oauth_verifier)
+    token, secret = twittermodel.get_access_token(request.query.oauth_token, request.query.oauth_verifier)
+    json_obj = {}
+    json_obj["token"] = token
+    json_obj["secret"] = secret
+    body = json.dumps(json_obj, ensure_ascii=False)
+    result = HTTPResponse(status=200, body=body)
+    result.set_header('Content-Type', 'application/json')
+    result.set_header('Access-Control-Allow-Origin', '*') #デバッグ用クロスドメイン
     return result
 
 # localhost:8080/twittercallback

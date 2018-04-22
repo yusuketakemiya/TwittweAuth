@@ -19,6 +19,9 @@ class ManageTwitter:
     twitter = property(get_twitter, set_twitter)
     CONSUMER_KEY = "HwYPqzZgCHEG8sUMkXr1111gg"
     CONSUMER_SECRET="iZPKHqXN7OubTeofDEZIW4Xh30Nbn9aNILtCns5tbkdgr4CuXv"
+    # REQUEST_TOKEN_URL = "https://api.twitter.com/oauth/request_token"
+    AUTHORIZE_URL = "https://api.twitter.com/oauth/authorize"
+    ACCESS_TOKEN_URL = "https://api.twitter.com/oauth/access_token"
     OAUTH_TOKEN = None
     OAUTH_SECRET = None
     
@@ -29,10 +32,18 @@ class ManageTwitter:
             format='', api_version=None)
         request = twitter.oauth.request_token()
         self.OAUTH_TOKEN, self.OAUTH_SECRET = self.parse_oauth_tokens(request)
-        oauth_url = ('https://api.twitter.com/oauth/authorize?oauth_token=' +
-            self.OAUTH_TOKEN)
+        oauth_url = (self.AUTHORIZE_URL + '?oauth_token=' + self.OAUTH_TOKEN)
         return oauth_url
 
+    def get_access_token(self, oauth_token, oauth_verifier):
+        print("accessurl call")
+        twitter = Twitter(
+            auth=OAuth(oauth_token, '', self.CONSUMER_KEY, self.CONSUMER_SECRET),
+            format='', api_version=None)
+        oauth_token, oauth_token_secret = self.parse_oauth_tokens(
+            twitter.oauth.access_token(oauth_verifier=oauth_verifier))
+        return oauth_token, oauth_token_secret
+    
     def oauthverifier(self, oauth_verifier):
         if self.OAUTH_TOKEN is None:
             return None

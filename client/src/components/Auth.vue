@@ -32,14 +32,16 @@ export default {
       var token = params[0].substring(1).split('=')[1]
       if (token === undefined) { return }
       var verifier = params[1].split('=')[1]
-      this.$store.commit('authTokenKeyRegist', token, verifier)
+      this.$store.commit('authTokenRegist', token)
+      this.$store.commit('authVerifierRegist', verifier)
+      this.getAccessTokenTwitter()
     },
     authTwitterCall () {
       this.authTwitter()
-      if (this.$store.state.twitter.authUrl == null) { return }
       location.href = this.$store.state.twitter.authUrl
     },
-    ...mapActions(['authTwitter'])
+    ...mapActions(['authTwitter']),
+    ...mapActions(['getAccessTokenTwitter'])
   }
 }
 </script>
