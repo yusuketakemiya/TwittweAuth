@@ -14,8 +14,6 @@
 
 <script>
 import { mapActions } from 'vuex'
-import axios from 'axios'
-const ACCESS_TOKEN_URL = 'http://localhost:8080/twittergetaccesstoken'
 
 export default {
   name: 'Auth',
@@ -26,10 +24,7 @@ export default {
     }
   },
   mounted: function () {
-    if (!this.urlParce()) {
-      this.sleepstart()
-    }
-    alert('end mounted')
+    this.urlParce()
   },
   methods: {
     async urlParce () {
@@ -40,69 +35,14 @@ export default {
       var verifier = params[1].split('=')[1]
       this.$store.commit('authTokenRegist', token)
       this.$store.commit('authVerifierRegist', verifier)
-
-      var url = ACCESS_TOKEN_URL + '?' + 'oauth_token=' + token + '&' + 'oauth_verifier=' + verifier
-      console.log('getAccessTokenTwitterTest:' + url)
-      try {
-        alert('getAccessTokenTwitterTest axios.get(url)')
-        const response = await axios.get(url)
-        alert('getAccessTokenTwitterTest axios.get(url) end')
-        alert('getAccessTokenTwitterTest response:' + response)
-
-        this.sleeppend()
-      } catch (error) {
-        console.error('Error:', error)
-        alert('getAccessTokenTwitterTest Error' + error)
-      } finally {
-        console.error('getAccessTokenTwitterTest end')
-        alert('getAccessTokenTwitterTest end')
-      }
-
-      alert('end urlParce')
-      return false
-    },
-    sleepstart () {
-      alert('sleepstart')
-      this.isLoad = true
-      while (this.isLoad) {
-        this.sleep(1000)
-      }
-    },
-    sleeppend () {
-      alert('sleeppend')
-      this.isLoad = false
-    },
-    async sleep (sec) {
-      console.log('wait ' + sec.toString() + ' sec right now!')
-      await this.sleepByPromise(sec)
-      console.log('wait ' + sec.toString() + ' sec done!')
-    },
-    sleepByPromise (sec) {
-      return new Promise(resolve => setTimeout(resolve, sec * 1000))
+      this.getAccessTokenTwitter()
+      this.$router.push({ name: 'Main' })
     },
     authTwitterCall () {
       this.authTwitter(this.authLocationHref)
     },
     authLocationHref (authUrl) {
       location.href = this.$store.state.twitter.authUrl
-    },
-    async getAccessTokenTwitterTest (token, verifier, callback) {
-      var url = ACCESS_TOKEN_URL + '?' + 'oauth_token=' + token + '&' + 'oauth_verifier=' + verifier
-      console.log('getAccessTokenTwitterTest:' + url)
-      try {
-        alert('getAccessTokenTwitterTest axios.get(url)')
-        const response = await axios.get(url)
-        alert('getAccessTokenTwitterTest axios.get(url) end')
-        alert('getAccessTokenTwitterTest response:' + response)
-        callback()
-      } catch (error) {
-        console.error('Error:', error)
-        alert('getAccessTokenTwitterTest Error' + error)
-      } finally {
-        console.error('getAccessTokenTwitterTest end')
-        alert('getAccessTokenTwitterTest end')
-      }
-      alert('getAccessTokenTwitterTest ended')
     },
     ...mapActions(['authTwitter']),
     ...mapActions(['getAccessTokenTwitter'])

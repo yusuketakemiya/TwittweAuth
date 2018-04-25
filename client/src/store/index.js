@@ -9,6 +9,9 @@ const ACCESS_TOKEN_URL = 'http://localhost:8080/twittergetaccesstoken'
 
 export default new Vuex.Store({
   state: {
+    main: {
+      isInit: true
+    },
     twitter: {
       token: null,
       verifier: null,
@@ -21,6 +24,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    initStateRegist ({ main }, isInit) {
+      main.isInit = isInit
+    },
     authUrlRegist ({ twitter }, authUrl) {
       twitter.authUrl = authUrl
     },
@@ -66,21 +72,17 @@ export default new Vuex.Store({
           console.error('Error:', error)
         })
     },
-    async getAccessTokenTwitter ({commit, state}, callback) {
+    getAccessTokenTwitter ({commit, state}) {
       var url = ACCESS_TOKEN_URL + '?' + 'oauth_token=' + state.twitter.token + '&' + 'oauth_verifier=' + state.twitter.verifier
       console.log('getAccessTokenTwitter:' + url)
-      try {
-        alert('getAccessTokenTwitter await axios.get(url)')
-        const response = await axios.get(url)
-        alert('getAccessTokenTwitter await axios.get(url) end')
-        commit('authUserTokenRegist', response.data.token)
-        commit('authUserSecretRegist', response.data.secret)
-        callback()
-      } catch (error) {
-        console.error('Error:', error)
-      } finally {
-        console.error('getAccessTokenTwitter end')
-      }
+      axios.get(url)
+        .then(response => {
+          commit('authUserTokenRegist', response.data.token)
+          commit('authUserSecretRegist', response.data.secret)
+        })
+        .catch(error => {
+          console.error('Error:', error)
+        })
     },
     authTwitterClear ({commit}) {
       commit('authTokenKeyRegist', null, null)
@@ -88,6 +90,7 @@ export default new Vuex.Store({
     authTwitterLoad ({commit}) {
       var oauthtoken = localStorage.getItem('oauth_token')
       var oauthverifier = localStorage.getItem('oauth_verifier')
+      commit('authTokenKeyRegist', oauthtoken, oauthverifier)
       commit('authTokenKeyRegist', oauthtoken, oauthverifier)
     }
   }
