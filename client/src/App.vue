@@ -24,6 +24,7 @@ export default {
     init () {
       if (this.$store.state.main.isInit === false) { return }
       this.authTwitterLoad()
+      this.getConsumerInfo()
       this.$store.commit('initStateRegist', false)
       if (this.$store.state.twitter.isAuth) {
         this.$router.push({ name: 'Main' })
@@ -31,7 +32,8 @@ export default {
       }
       this.$router.push({ name: 'Auth' })
     },
-    ...mapActions(['authTwitterLoad'])
+    ...mapActions(['authTwitterLoad']),
+    ...mapActions(['getConsumerInfo'])
   }
 }
 </script>
@@ -43,5 +45,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+header {
+  background: #50b9c7;
+  margin-bottom: 5px
 }
 </style>

@@ -11,6 +11,21 @@ twittermodel = TwitterModel()
 def init():
     return "TEST"
 
+# localhost:8080/consumerinfo
+@route('/consumerinfo', method='GET')
+def consumerinfo():
+    print('consumerinfo call')
+    key, secret = twittermodel.consumer_info()
+    json_obj = {}
+    json_obj["key"] = key
+    json_obj["secret"] = secret
+    body = json.dumps(json_obj, ensure_ascii=False)
+    result = HTTPResponse(status=200, body=body)
+    result.set_header('Content-Type', 'application/json')
+    result.set_header('Access-Control-Allow-Origin', '*') #デバッグ用クロスドメイン
+    print('consumerinfo result')
+    return result
+
 # localhost:8080/twitteroauthurl
 @route('/twitteroauthurl', method='GET')
 def twitteroauthurl():

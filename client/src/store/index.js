@@ -4,6 +4,7 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
+const CONSUMER_INFO_URL = 'http://localhost:8080/consumerinfo'
 const AUTHORIZE_URL = 'http://localhost:8080/twitteroauthurl'
 const ACCESS_TOKEN_URL = 'http://localhost:8080/twittergetaccesstoken'
 
@@ -19,6 +20,10 @@ export default new Vuex.Store({
       isAuth: false,
       user: {
         token: null,
+        secret: null
+      },
+      consumer: {
+        key: null,
         secret: null
       }
     }
@@ -57,6 +62,10 @@ export default new Vuex.Store({
     authUserSecretRegist ({ twitter }, secret) {
       localStorage.setItem('user_oauth_secret', secret)
       twitter.user.secret = secret
+    },
+    consumerInfoRegist ({ twitter }, key, secret) {
+      twitter.consumer.key = key
+      twitter.consumer.secret = secret
     }
   },
   actions: {
@@ -67,6 +76,17 @@ export default new Vuex.Store({
           console.log(response.data)
           commit('authUrlRegist', response.data.url)
           authLocationHref(response.data.url)
+        })
+        .catch(error => {
+          console.error('Error:', error)
+        })
+    },
+    getConsumerInfo ({commit, state}) {
+      var url = CONSUMER_INFO_URL
+      console.log('getConsumerInfo:' + url)
+      axios.get(url)
+        .then(response => {
+          commit('consumerInfoRegist', response.data.key, response.data.secret)
         })
         .catch(error => {
           console.error('Error:', error)

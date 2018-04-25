@@ -8,6 +8,9 @@ class TwitterModel:
     # print("OAUTH_SECRET:" + twitter.OAUTH_SECRET)
     # twitter.oauth()
 
+    def consumer_info(self):
+        return self.twitter.consumer_info()
+
     def oauth_url(self):
         return self.twitter.oauthurl()
     

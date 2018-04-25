@@ -24,7 +24,11 @@ class ManageTwitter:
     ACCESS_TOKEN_URL = "https://api.twitter.com/oauth/access_token"
     OAUTH_TOKEN = None
     OAUTH_SECRET = None
-    
+
+    def consumer_info(self):
+        print("consumer_info call")
+        return self.CONSUMER_KEY, self.CONSUMER_SECRET
+
     def oauthurl(self):
         print("oauthurl call")
         twitter = Twitter(
