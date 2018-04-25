@@ -17,24 +17,26 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'Auth',
+  isLoad: false,
   data () {
     return {
       msg: 'Top'
     }
   },
-  created: function () {
+  mounted: function () {
     this.urlParce()
   },
   methods: {
-    urlParce () {
+    async urlParce () {
       var parser = new URL(location.href)
       var params = parser.search.split('&')
       var token = params[0].substring(1).split('=')[1]
-      if (token === undefined) { return }
+      if (token === undefined) { return true }
       var verifier = params[1].split('=')[1]
       this.$store.commit('authTokenRegist', token)
       this.$store.commit('authVerifierRegist', verifier)
       this.getAccessTokenTwitter()
+      this.$router.push({ name: 'Main' })
     },
     authTwitterCall () {
       this.authTwitter(this.authLocationHref)

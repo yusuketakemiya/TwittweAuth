@@ -8,7 +8,7 @@
       </div>
     </header>
     <img src="./assets/nikukyu.png">
-    <router-view></router-view>
+    <router-view v-bind:todos="todos" ></router-view>
   </div>
 </template>
 
@@ -22,13 +22,14 @@ export default {
   },
   methods: {
     init () {
+      if (this.$store.state.main.isInit === false) { return }
       this.authTwitterLoad()
+      this.$store.commit('initStateRegist', false)
       if (this.$store.state.twitter.isAuth) {
-        if (location.pathname === '/#/Main') { return }
-        location.href = './#/Main'
+        this.$router.push({ name: 'Main' })
         return
       }
-      location.href = './#/Auth'
+      this.$router.push({ name: 'Auth' })
     },
     ...mapActions(['authTwitterLoad'])
   }

@@ -9,14 +9,24 @@ const ACCESS_TOKEN_URL = 'http://localhost:8080/twittergetaccesstoken'
 
 export default new Vuex.Store({
   state: {
+    main: {
+      isInit: true
+    },
     twitter: {
       token: null,
       verifier: null,
       authUrl: null,
-      isAuth: false
+      isAuth: false,
+      user: {
+        token: null,
+        secret: null
+      }
     }
   },
   mutations: {
+    initStateRegist ({ main }, isInit) {
+      main.isInit = isInit
+    },
     authUrlRegist ({ twitter }, authUrl) {
       twitter.authUrl = authUrl
     },
@@ -41,10 +51,12 @@ export default new Vuex.Store({
       }
     },
     authUserTokenRegist ({ twitter }, token) {
-      alert('authUserTokenRegist:' + token)
+      localStorage.setItem('user_oauth_token', token)
+      twitter.user.token = token
     },
     authUserSecretRegist ({ twitter }, secret) {
-      alert('authUserSecretRegist:' + secret)
+      localStorage.setItem('user_oauth_secret', secret)
+      twitter.user.secret = secret
     }
   },
   actions: {
@@ -65,12 +77,10 @@ export default new Vuex.Store({
       console.log('getAccessTokenTwitter:' + url)
       axios.get(url)
         .then(response => {
-          alert('getAccessTokenTwitter get')
           commit('authUserTokenRegist', response.data.token)
           commit('authUserSecretRegist', response.data.secret)
         })
         .catch(error => {
-          alert('getAccessTokenTwitter catch')
           console.error('Error:', error)
         })
     },
@@ -80,6 +90,7 @@ export default new Vuex.Store({
     authTwitterLoad ({commit}) {
       var oauthtoken = localStorage.getItem('oauth_token')
       var oauthverifier = localStorage.getItem('oauth_verifier')
+      commit('authTokenKeyRegist', oauthtoken, oauthverifier)
       commit('authTokenKeyRegist', oauthtoken, oauthverifier)
     }
   }
