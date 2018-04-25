@@ -13,7 +13,11 @@ export default new Vuex.Store({
       token: null,
       verifier: null,
       authUrl: null,
-      isAuth: false
+      isAuth: false,
+      user: {
+        token: null,
+        secret: null
+      }
     }
   },
   mutations: {
@@ -41,10 +45,12 @@ export default new Vuex.Store({
       }
     },
     authUserTokenRegist ({ twitter }, token) {
-      alert('authUserTokenRegist:' + token)
+      localStorage.setItem('user_oauth_token', token)
+      twitter.user.token = token
     },
     authUserSecretRegist ({ twitter }, secret) {
-      alert('authUserSecretRegist:' + secret)
+      localStorage.setItem('user_oauth_secret', secret)
+      twitter.user.secret = secret
     }
   },
   actions: {
@@ -60,19 +66,21 @@ export default new Vuex.Store({
           console.error('Error:', error)
         })
     },
-    getAccessTokenTwitter ({commit, state}) {
+    async getAccessTokenTwitter ({commit, state}, callback) {
       var url = ACCESS_TOKEN_URL + '?' + 'oauth_token=' + state.twitter.token + '&' + 'oauth_verifier=' + state.twitter.verifier
       console.log('getAccessTokenTwitter:' + url)
-      axios.get(url)
-        .then(response => {
-          alert('getAccessTokenTwitter get')
-          commit('authUserTokenRegist', response.data.token)
-          commit('authUserSecretRegist', response.data.secret)
-        })
-        .catch(error => {
-          alert('getAccessTokenTwitter catch')
-          console.error('Error:', error)
-        })
+      try {
+        alert('getAccessTokenTwitter await axios.get(url)')
+        const response = await axios.get(url)
+        alert('getAccessTokenTwitter await axios.get(url) end')
+        commit('authUserTokenRegist', response.data.token)
+        commit('authUserSecretRegist', response.data.secret)
+        callback()
+      } catch (error) {
+        console.error('Error:', error)
+      } finally {
+        console.error('getAccessTokenTwitter end')
+      }
     },
     authTwitterClear ({commit}) {
       commit('authTokenKeyRegist', null, null)
